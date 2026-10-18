@@ -1,0 +1,687 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapor Digital PPSMI</title>
+
+<style>
+:root {
+  --g:#174c30;
+  --g2:#246b48;
+  --light:#eaf4ed;
+  --bg:#f4f7f4;
+  --line:#d8e3da;
+  --ink:#202b23;
+}
+*{box-sizing:border-box}
+body{margin:0;font:14px Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(120deg,#103b26,#27734b);color:white;padding:24px}
+.brand{display:flex;align-items:center;gap:18px;max-width:1250px;margin:auto}
+.emblem{width:80px;height:80px;flex-shrink:0;border:3px double white;border-radius:50%;display:grid;place-items:center;font-size:25px;font-weight:bold}
+.brand h1{font-size:22px;margin:0 0 8px}
+.brand .arabic{font-size:23px;margin-bottom:8px}
+.brand p{margin:4px 0;font-size:12px}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1500px;margin:auto;min-height:85vh}
+aside{background:white;border-right:1px solid var(--line);padding:15px}
+nav button{width:100%;text-align:left;border:0;background:white;padding:13px;border-radius:8px;margin:3px 0;cursor:pointer;color:var(--ink)}
+nav button.active,nav button:hover{background:var(--light);color:var(--g);font-weight:bold}
+main{padding:24px;min-width:0}
+h2{color:var(--g);margin-top:0}
+h3{margin-top:0}
+.panel{background:white;padding:18px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.stat{padding:18px;background:white;border:1px solid var(--line);border-radius:12px}
+.stat strong{display:block;font-size:27px;color:var(--g);margin-top:10px}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;font-weight:bold}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd8ce;border-radius:7px;font:inherit;min-width:0;background:white}
+.btn{border:0;border-radius:7px;padding:10px 14px;cursor:pointer;background:var(--g);color:white;font-weight:bold}
+.btn.light{background:var(--light);color:var(--g)}
+.btn.red{background:#fff0ef;color:#a82020}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px;font-size:12px}
+th,td{border:1px solid #8b968e;padding:8px;text-align:left;vertical-align:middle}
+th{background:var(--light);color:var(--g)}
+.hidden{display:none!important}
+.note{background:#fff7df;padding:12px;border-radius:8px;line-height:1.6;margin-bottom:18px;font-size:12px}
+.muted{font-size:12px;color:#69756c;line-height:1.6}
+.report{background:white;padding:0;border:0;margin-bottom:20px}
+.report-head{display:none!important}
+.report-title{text-align:center;margin:0 0 14px}
+.report-title h3{margin:0 0 5px}
+.identity{display:grid;grid-template-columns:1fr 1fr;gap:8px 25px;margin:14px 0;font-size:12px}
+.identity div{display:grid;grid-template-columns:125px 10px 1fr;gap:4px}
+.bilingual{display:block}
+.bilingual table{width:100%;min-width:0;table-layout:fixed;font-size:11px}
+.bilingual th,.bilingual td{padding:6px;overflow-wrap:anywhere}
+.summary{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.signature{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center;font-size:11px;margin-top:35px}
+.signature .space{height:65px}
+footer{text-align:center;padding:20px;color:#758078;font-size:11px}
+
+@media(max-width:800px){
+ .layout{grid-template-columns:1fr}
+ aside{border-bottom:1px solid var(--line)}
+ nav{display:flex;overflow:auto;gap:4px}
+ nav button{width:auto;white-space:nowrap}
+ main{padding:12px}
+ .fields{grid-template-columns:1fr 1fr}
+ .brand h1{font-size:17px}
+ .brand .arabic{font-size:18px}
+ .emblem{width:58px;height:58px}
+ .identity{grid-template-columns:1fr}
+ .identity div{grid-template-columns:110px 8px 1fr}
+ .signature{font-size:9px}
+}
+
+@media print{
+ @page{size:A4 portrait;margin:15mm 12mm 12mm}
+ body{background:white}
+ header,aside,.no-print,footer,.note{display:none!important}
+ .layout{display:block;max-width:none;min-height:0}
+ main{padding:0}
+ main section{display:none!important}
+ main section#rapor{display:block!important}
+ #rapor>h2{display:none}
+ #hasilRapor{display:block!important}
+ .report{border:0;padding:0;margin:0}
+ .report-head{display:none!important}
+ .report-title{margin-top:25mm;margin-bottom:12px}
+ .identity{grid-template-columns:1fr 1fr}
+ .bilingual{display:block}
+ .bilingual table{width:100%;min-width:0;font-size:11px}
+ .bilingual th,.bilingual td{padding:6px}
+ .signature{font-size:11px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="brand">
+  <div class="emblem">SMI</div>
+  <div>
+   <div class="arabic">دار القرآن والحديث معهد السراج المنير إيبوكو</div>
+   <h1>PONDOK PESANTREN INTERNASIONAL SIROJUL MUNIR IBUKU</h1>
+   <p>Kp. Legok Harendong – Bandung – Indonesia</p>
+   <p>SISTEM RAPOR DIGITAL PPSMI</p>
+  </div>
+ </div>
+</header>
+
+<div class="layout">
+<aside class="no-print">
+ <nav>
+  <button class="active" data-page="dashboard">▦ Dashboard</button>
+  <button data-page="santri">♙ Data Santri</button>
+  <button data-page="mapel">▤ Mata Pelajaran</button>
+  <button data-page="nilai">✎ Input Nilai</button>
+  <button data-page="rapor">▣ Rapor</button>
+  <button data-page="pengaturan">⚙ Pengaturan</button>
+ </nav>
+</aside>
+
+<main>
+<div class="note no-print">
+ <b>Catatan:</b> Data tersimpan secara lokal di browser perangkat ini.
+ Unduh cadangan secara berkala. Versi ini belum menggunakan database online.
+</div>
+
+<section id="dashboard">
+ <h2>Dashboard PPSMI</h2>
+ <p>Pengelolaan nilai dan rapor santri.</p>
+ <div class="stats">
+  <div class="stat">Total Santri<strong id="totalSantri">0</strong></div>
+  <div class="stat">Jumlah Kelas<strong id="totalKelas">0</strong></div>
+  <div class="stat">Mata Pelajaran<strong id="totalMapel">0</strong></div>
+ </div>
+ <div class="panel">
+  <h3>Alur Penggunaan</h3>
+  <p>1. Masukkan data santri dan kelas.</p>
+  <p>2. Buat mata pelajaran serta nama guru pengampu.</p>
+  <p>3. Input nilai dan rekap kehadiran.</p>
+  <p>4. Pilih semester, wali kelas, lalu cetak rapor.</p>
+  <div class="actions">
+   <button class="btn" onclick="backup()">Unduh Cadangan JSON</button>
+   <button class="btn light" onclick="$('fileImport').click()">Pulihkan Cadangan</button>
+   <input id="fileImport" type="file" accept=".json" hidden onchange="restore(event)">
+  </div>
+ </div>
+</section>
+
+<section id="santri" class="hidden">
+ <h2>Data Santri</h2>
+ <div class="panel">
+  <h3>Tambah atau Edit Santri</h3>
+  <form id="formSantri">
+   <input type="hidden" id="editSantri">
+   <div class="fields">
+    <div class="field"><label>Nomor Induk</label><input id="nis" placeholder="PPSMI-001"></div>
+    <div class="field"><label>Nama Lengkap *</label><input id="namaSantri" required></div>
+    <div class="field"><label>Kelas *</label><input id="kelasSantri" list="kelasList" required placeholder="Contoh: 1 SMP"></div>
+    <div class="field"><label>Nama Orang Tua/Wali</label><input id="ortuSantri"></div>
+    <div class="field"><label>Jenis Kelamin</label><select id="jk"><option value="">Pilih</option><option>Putra</option><option>Putri</option></select></div>
+    <div class="field"><label>Status Santri</label><select id="statusSantri"><option>Aktif</option><option>Lulus</option><option>Pindah</option></select></div>
+   </div>
+   <datalist id="kelasList"></datalist>
+   <div class="actions">
+    <button class="btn" type="submit">Simpan Santri</button>
+    <button class="btn light" type="button" onclick="resetSantri()">Bersihkan</button>
+   </div>
+  </form>
+ </div>
+ <div class="panel">
+  <input id="cariSantri" placeholder="Cari nama, nomor induk, atau kelas..." oninput="renderSantri()">
+  <div id="tabelSantri"></div>
+ </div>
+</section>
+
+<section id="mapel" class="hidden">
+ <h2>Mata Pelajaran</h2>
+ <div class="panel">
+  <form id="formMapel">
+   <input type="hidden" id="editMapel">
+   <div class="fields">
+    <div class="field"><label>Nama Mata Pelajaran *</label><input id="namaMapel" required placeholder="Contoh: Durusul Lughah"></div>
+    <div class="field"><label>Kelas *</label><input id="kelasMapel" list="kelasList" required></div>
+    <div class="field"><label>Nama Guru *</label><input id="guruMapel" required></div>
+    <div class="field"><label>Semester</label><select id="semesterMapel"><option>Ganjil</option><option>Genap</option></select></div>
+    <div class="field"><label>Tahun Pelajaran</label><input id="tahunMapel"></div>
+    <div class="field"><label>KKM</label><input id="kkmMapel" type="number" min="0" max="100" value="75"></div>
+   </div>
+   <div class="actions">
+    <button class="btn" type="submit">Simpan Mata Pelajaran</button>
+    <button class="btn light" type="button" onclick="resetMapel()">Bersihkan</button>
+   </div>
+  </form>
+ </div>
+ <div class="panel"><div id="tabelMapel"></div></div>
+</section>
+
+<section id="nilai" class="hidden">
+ <h2>Input Nilai dan Kehadiran</h2>
+ <div class="panel">
+  <div class="fields">
+   <div class="field"><label>Kelas</label><select id="kelasNilai" onchange="isiMapelNilai()"></select></div>
+   <div class="field"><label>Mata Pelajaran</label><select id="mapelNilai"></select></div>
+   <div class="field"><label>Semester</label><select id="semesterNilai" onchange="isiMapelNilai()"><option>Ganjil</option><option>Genap</option></select></div>
+   <div class="field"><label>Komponen Nilai</label>
+    <select id="komponenNilai">
+     <option value="harian">Nilai Harian</option>
+     <option value="tugas">Tugas</option>
+     <option value="pts">PTS / UTS</option>
+     <option value="pas">PAS / UAS</option>
+     <option value="praktik">Praktik</option>
+     <option value="sikap">Sikap (0–100)</option>
+    </select>
+   </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="tampilkanNilai()">Tampilkan Santri</button></div>
+ </div>
+
+ <div class="panel">
+  <h3>Nilai Santri</h3>
+  <div id="tabelNilai" class="muted">Pilih kelas dan mata pelajaran.</div>
+  <div class="actions"><button class="btn" onclick="simpanNilai()">Simpan Nilai</button></div>
+ </div>
+
+ <div class="panel">
+  <h3>Rekap Kehadiran</h3>
+  <p class="muted">Isi jumlah hari sakit, izin, dan alpha untuk setiap santri.</p>
+  <div class="fields">
+   <div class="field"><label>Kelas</label><select id="kelasAbsensi"></select></div>
+   <div class="field"><label>Semester</label><select id="semesterAbsensi"><option>Ganjil</option><option>Genap</option></select></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="tampilkanAbsensi()">Tampilkan Kehadiran</button></div>
+  <div id="tabelAbsensi"></div>
+  <div class="actions"><button class="btn" onclick="simpanAbsensi()">Simpan Kehadiran</button></div>
+ </div>
+</section>
+
+<section id="rapor" class="hidden">
+ <h2>Rapor Digital PPSMI</h2>
+ <div class="panel no-print">
+  <div class="fields">
+   <div class="field"><label>Kelas</label><select id="kelasRapor" onchange="isiSantriRapor()"></select></div>
+   <div class="field"><label>Nama Santri</label><select id="santriRapor"></select></div>
+   <div class="field"><label>Semester</label><select id="semesterRapor" onchange="aturKenaikan()"><option>Ganjil</option><option>Genap</option></select></div>
+   <div class="field"><label>Tahun Pelajaran</label><input id="tahunRapor"></div>
+   <div class="field"><label>Nama Wali Kelas</label><input id="waliKelas" placeholder="Nama lengkap wali kelas"></div>
+   <div class="field"><label>Status Kenaikan / Kelulusan</label>
+    <select id="statusNaik">
+     <option value="">Belum ditentukan</option>
+     <option>Naik Kelas</option>
+     <option>Tidak Naik Kelas</option>
+     <option>Lulus</option>
+    </select>
+   </div>
+  </div>
+  <p class="muted">Status kenaikan kelas hanya ditampilkan pada semester genap.</p>
+  <div class="actions">
+   <button class="btn" onclick="buatRapor()">Tampilkan Rapor</button>
+   <button class="btn light" onclick="window.print()">Cetak / Simpan PDF</button>
+  </div>
+ </div>
+ <div id="hasilRapor"></div>
+</section>
+
+<section id="pengaturan" class="hidden">
+ <h2>Pengaturan Lembaga</h2>
+ <div class="panel">
+  <form id="formPengaturan">
+   <div class="fields">
+    <div class="field"><label>Nama Lembaga</label><input id="namaLembaga"></div>
+    <div class="field"><label>Tahun Pelajaran Aktif</label><input id="tahunAktif"></div>
+    <div class="field"><label>Alamat</label><input id="alamatLembaga"></div>
+    <div class="field"><label>Nama Pimpinan</label><input id="pimpinan"></div>
+    <div class="field"><label>Nomor Telepon</label><input id="telepon"></div>
+    <div class="field"><label>Email</label><input id="email"></div>
+   </div>
+   <div class="actions"><button class="btn">Simpan Pengaturan</button></div>
+  </form>
+  <p class="muted">Logo digital tidak ditampilkan pada lembar rapor cetak karena kertas sudah memiliki kop resmi.</p>
+ </div>
+ <div class="panel">
+  <h3>Cadangan dan Penghapusan</h3>
+  <div class="actions">
+   <button class="btn" onclick="backup()">Unduh Cadangan</button>
+   <button class="btn light" onclick="$('fileImport').click()">Pulihkan Cadangan</button>
+   <button class="btn red" onclick="hapusSemua()">Hapus Semua Data</button>
+  </div>
+ </div>
+</section>
+</main>
+</div>
+
+<footer>Rapor Digital Pondok Pesantren Internasional Sirojul Munir Ibuku</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY="ppsmi_bilingual_v2";
+const komponen=["harian","tugas","pts","pas","praktik"];
+
+let db={
+ santri:[],mapel:[],nilai:{},absensi:{},wali:{},
+ pengaturan:{
+  nama:"PONDOK PESANTREN INTERNASIONAL SIROJUL MUNIR IBUKU",
+  tahun:"2026/2027",
+  alamat:"Kp. Legok Harendong – Bandung – Indonesia",
+  pimpinan:"",telepon:"+6281288107517",
+  email:"sirojulmuniribuku@gmail.com"
+ }
+};
+
+function aman(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function uid(){
+ return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+}
+function keyNilai(s,m,sem,k){return [s,m,sem,k].join("|")}
+function keyAbs(s,sem){return [s,sem].join("|")}
+
+function simpan(){
+ localStorage.setItem(KEY,JSON.stringify(db));
+ renderSemua();
+}
+function muat(){
+ try{
+  const d=JSON.parse(localStorage.getItem(KEY)||"null");
+  if(d)db={...db,...d,pengaturan:{...db.pengaturan,...(d.pengaturan||{})}};
+ }catch(e){alert("Data tersimpan tidak bisa dibaca.")}
+}
+function kelasUnik(){
+ return [...new Set([...db.santri.map(s=>s.kelas),...db.mapel.map(m=>m.kelas)].filter(Boolean))].sort();
+}
+function opsiKelas(elid,keep=true){
+ const el=$(elid),old=el.value;
+ el.innerHTML='<option value="">Pilih kelas</option>'+
+ kelasUnik().map(k=>`<option value="${aman(k)}">${aman(k)}</option>`).join("");
+ if(keep&&kelasUnik().includes(old))el.value=old;
+}
+function renderSemua(){
+ $("totalSantri").textContent=db.santri.length;
+ $("totalKelas").textContent=kelasUnik().length;
+ $("totalMapel").textContent=db.mapel.length;
+ $("kelasList").innerHTML=kelasUnik().map(k=>`<option value="${aman(k)}">`).join("");
+ ["kelasNilai","kelasAbsensi","kelasRapor"].forEach(id=>opsiKelas(id));
+ $("namaLembaga").value=db.pengaturan.nama;
+ $("tahunAktif").value=db.pengaturan.tahun;
+ $("alamatLembaga").value=db.pengaturan.alamat;
+ $("pimpinan").value=db.pengaturan.pimpinan;
+ $("telepon").value=db.pengaturan.telepon;
+ $("email").value=db.pengaturan.email;
+ $("tahunRapor").value=$("tahunRapor").value||db.pengaturan.tahun;
+ renderSantri();
+ renderMapel();
+ isiMapelNilai();
+ isiSantriRapor();
+ aturKenaikan();
+}
+function halaman(id){
+ document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ renderSemua();
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>halaman(b.dataset.page));
+
+$("formSantri").onsubmit=e=>{
+ e.preventDefault();
+ const id=$("editSantri").value||uid();
+ const s={
+  id,nis:$("nis").value.trim(),nama:$("namaSantri").value.trim(),
+  kelas:$("kelasSantri").value.trim(),ortu:$("ortuSantri").value.trim(),
+  jk:$("jk").value,status:$("statusSantri").value
+ };
+ const i=db.santri.findIndex(x=>x.id===id);
+ if(i>=0)db.santri[i]=s;else db.santri.push(s);
+ resetSantri();simpan();alert("Data santri disimpan.");
+};
+function resetSantri(){
+ $("formSantri").reset();$("editSantri").value="";
+}
+function renderSantri(){
+ const q=($("cariSantri").value||"").toLowerCase();
+ const arr=db.santri.filter(s=>(s.nama+" "+s.nis+" "+s.kelas).toLowerCase().includes(q));
+ $("tabelSantri").innerHTML=arr.length?`<div class="tablewrap"><table>
+ <thead><tr><th>No.</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Orang Tua/Wali</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+ ${arr.map((s,i)=>`<tr><td>${i+1}</td><td>${aman(s.nama)}</td><td>${aman(s.nis||"-")}</td><td>${aman(s.kelas)}</td><td>${aman(s.ortu||"-")}</td><td>${aman(s.status)}</td><td><button class="btn light" onclick="editSantri('${s.id}')">Edit</button> <button class="btn red" onclick="hapusSantri('${s.id}')">Hapus</button></td></tr>`).join("")}
+ </tbody></table></div>`:'<p class="muted">Belum ada data santri.</p>';
+}
+window.editSantri=id=>{
+ const s=db.santri.find(x=>x.id===id);if(!s)return;
+ $("editSantri").value=s.id;$("nis").value=s.nis;$("namaSantri").value=s.nama;
+ $("kelasSantri").value=s.kelas;$("ortuSantri").value=s.ortu||"";
+ $("jk").value=s.jk;$("statusSantri").value=s.status;
+ halaman("santri");
+};
+window.hapusSantri=id=>{
+ if(!confirm("Hapus data santri ini?"))return;
+ db.santri=db.santri.filter(s=>s.id!==id);
+ Object.keys(db.nilai).filter(k=>k.startsWith(id+"|")).forEach(k=>delete db.nilai[k]);
+ Object.keys(db.absensi).filter(k=>k.startsWith(id+"|")).forEach(k=>delete db.absensi[k]);
+ simpan();
+};
+
+$("formMapel").onsubmit=e=>{
+ e.preventDefault();
+ const id=$("editMapel").value||uid();
+ const m={
+  id,nama:$("namaMapel").value.trim(),kelas:$("kelasMapel").value.trim(),
+  guru:$("guruMapel").value.trim(),semester:$("semesterMapel").value,
+  tahun:$("tahunMapel").value.trim()||db.pengaturan.tahun,
+  kkm:Number($("kkmMapel").value||75)
+ };
+ const i=db.mapel.findIndex(x=>x.id===id);
+ if(i>=0)db.mapel[i]=m;else db.mapel.push(m);
+ resetMapel();simpan();alert("Mata pelajaran disimpan.");
+};
+function resetMapel(){
+ $("formMapel").reset();$("editMapel").value="";
+ $("tahunMapel").value=db.pengaturan.tahun;$("kkmMapel").value=75;
+}
+function renderMapel(){
+ $("tabelMapel").innerHTML=db.mapel.length?`<div class="tablewrap"><table><thead><tr><th>No.</th><th>Pelajaran</th><th>Kelas</th><th>Guru</th><th>Semester</th><th>KKM</th><th>Aksi</th></tr></thead><tbody>
+ ${db.mapel.map((m,i)=>`<tr><td>${i+1}</td><td>${aman(m.nama)}</td><td>${aman(m.kelas)}</td><td>${aman(m.guru)}</td><td>${m.semester}</td><td>${m.kkm}</td><td><button class="btn light" onclick="editMapel('${m.id}')">Edit</button> <button class="btn red" onclick="hapusMapel('${m.id}')">Hapus</button></td></tr>`).join("")}
+ </tbody></table></div>`:'<p class="muted">Belum ada mata pelajaran.</p>';
+}
+window.editMapel=id=>{
+ const m=db.mapel.find(x=>x.id===id);if(!m)return;
+ $("editMapel").value=m.id;$("namaMapel").value=m.nama;
+ $("kelasMapel").value=m.kelas;$("guruMapel").value=m.guru;
+ $("semesterMapel").value=m.semester;$("tahunMapel").value=m.tahun;
+ $("kkmMapel").value=m.kkm;halaman("mapel");
+};
+window.hapusMapel=id=>{
+ if(confirm("Hapus mata pelajaran ini?")){
+  db.mapel=db.mapel.filter(m=>m.id!==id);simpan();
+ }
+};
+
+function isiMapelNilai(){
+ const kelas=$("kelasNilai").value,sem=$("semesterNilai").value,old=$("mapelNilai").value;
+ const ms=db.mapel.filter(m=>m.kelas===kelas&&m.semester===sem);
+ $("mapelNilai").innerHTML='<option value="">Pilih mata pelajaran</option>'+
+ ms.map(m=>`<option value="${m.id}">${aman(m.nama)} — ${aman(m.guru)}</option>`).join("");
+ if(ms.some(m=>m.id===old))$("mapelNilai").value=old;
+}
+function tampilkanNilai(){
+ const kelas=$("kelasNilai").value,mid=$("mapelNilai").value,sem=$("semesterNilai").value,kom=$("komponenNilai").value;
+ if(!kelas||!mid)return alert("Pilih kelas dan mata pelajaran.");
+ const ss=db.santri.filter(s=>s.kelas===kelas&&s.status==="Aktif");
+ $("tabelNilai").innerHTML=ss.length?`<div class="tablewrap"><table><thead><tr><th>No.</th><th>Nama Santri</th><th>Nilai (0–100)</th><th>Catatan</th></tr></thead><tbody>
+ ${ss.map((s,i)=>{const v=db.nilai[keyNilai(s.id,mid,sem,kom)]||{};return `<tr><td>${i+1}</td><td>${aman(s.nama)}</td><td><input class="nilaiInput" data-sid="${s.id}" type="number" min="0" max="100" step=".01" value="${v.nilai??""}"></td><td><input class="catatanInput" data-sid="${s.id}" value="${aman(v.catatan||"")}"></td></tr>`}).join("")}
+ </tbody></table></div>`:'<p class="muted">Belum ada santri aktif di kelas ini.</p>';
+}
+function simpanNilai(){
+ const mid=$("mapelNilai").value,sem=$("semesterNilai").value,kom=$("komponenNilai").value;
+ const inputs=[...document.querySelectorAll(".nilaiInput")];
+ if(!mid||!inputs.length)return alert("Tampilkan daftar santri dahulu.");
+ for(const x of inputs)if(x.value!==""&&(+x.value<0||+x.value>100||!Number.isFinite(+x.value)))return alert("Nilai harus 0–100.");
+ inputs.forEach(x=>{
+  const sid=x.dataset.sid;
+  const cat=document.querySelector(`.catatanInput[data-sid="${sid}"]`).value;
+  const k=keyNilai(sid,mid,sem,kom);
+  if(x.value===""&&!cat)delete db.nilai[k];
+  else db.nilai[k]={nilai:x.value===""?null:Number(x.value),catatan:cat};
+ });
+ simpan();tampilkanNilai();alert("Nilai disimpan.");
+}
+
+function tampilkanAbsensi(){
+ const kelas=$("kelasAbsensi").value,sem=$("semesterAbsensi").value;
+ if(!kelas)return alert("Pilih kelas.");
+ const ss=db.santri.filter(s=>s.kelas===kelas);
+ $("tabelAbsensi").innerHTML=ss.length?`<div class="tablewrap"><table><thead><tr><th>No.</th><th>Nama Santri</th><th>Sakit</th><th>Izin</th><th>Alpha</th></tr></thead><tbody>
+ ${ss.map((s,i)=>{const a=db.absensi[keyAbs(s.id,sem)]||{};return `<tr><td>${i+1}</td><td>${aman(s.nama)}</td>${["sakit","izin","alpha"].map(k=>`<td><input class="absInput" data-sid="${s.id}" data-type="${k}" type="number" min="0" step="1" value="${a[k]??0}"></td>`).join("")}</tr>`}).join("")}
+ </tbody></table></div>`:'<p class="muted">Belum ada santri di kelas ini.</p>';
+}
+function simpanAbsensi(){
+ const sem=$("semesterAbsensi").value,inputs=[...document.querySelectorAll(".absInput")];
+ if(!inputs.length)return alert("Tampilkan daftar kehadiran terlebih dahulu.");
+ for(const x of inputs)if(x.value===""||!Number.isInteger(+x.value)||+x.value<0)return alert("Jumlah hari harus bilangan bulat nol atau lebih.");
+ const ids=[...new Set(inputs.map(x=>x.dataset.sid))];
+ ids.forEach(id=>{
+  const a={};
+  inputs.filter(x=>x.dataset.sid===id).forEach(x=>a[x.dataset.type]=Number(x.value));
+  db.absensi[keyAbs(id,sem)]=a;
+ });
+ simpan();tampilkanAbsensi();alert("Rekap kehadiran disimpan.");
+}
+
+function isiSantriRapor(){
+ const kelas=$("kelasRapor").value,old=$("santriRapor").value;
+ const ss=db.santri.filter(s=>s.kelas===kelas);
+ $("santriRapor").innerHTML='<option value="">Pilih santri</option>'+
+ ss.map(s=>`<option value="${s.id}">${aman(s.nama)}</option>`).join("");
+ if(ss.some(s=>s.id===old))$("santriRapor").value=old;
+}
+function aturKenaikan(){
+ const genap=$("semesterRapor").value==="Genap";
+ $("statusNaik").disabled=!genap;
+ if(!genap)$("statusNaik").value="";
+}
+$("kelasRapor").addEventListener("change",()=>{
+ $("waliKelas").value=db.wali[$("kelasRapor").value]||"";
+});
+$("waliKelas").addEventListener("change",()=>{
+ const k=$("kelasRapor").value;
+ if(k){db.wali[k]=$("waliKelas").value;simpan()}
+});
+
+function kataInggris(n){
+ n=Math.floor(n);
+ const a=["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+ const b=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+ if(n<0||n>100)return String(n);
+ if(n<20)return a[n];
+ if(n<100)return b[Math.floor(n/10)]+(n%10?"-"+a[n%10]:"");
+ return "one hundred";
+}
+function kataArab(n){
+ n=Math.floor(n);
+ const a=["صفر","واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة","عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر","خمسة عشر","ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر"];
+ const tens=["","","عشرون","ثلاثون","أربعون","خمسون","ستون","سبعون","ثمانون","تسعون"];
+ if(n<0||n>100)return String(n);
+ if(n<20)return a[n];
+ if(n<100)return (n%10?a[n%10]+" و":"")+tens[Math.floor(n/10)];
+ return "مائة";
+}
+function angkaArab(n){
+ return String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+}
+function nilaiAkhir(s,m,sem){
+ const vals=komponen.map(c=>db.nilai[keyNilai(s.id,m.id,sem,c)]?.nilai)
+ .filter(v=>v!==null&&v!==undefined&&v!=="").map(Number);
+ return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+}
+
+function buatRapor(){
+ const s=db.santri.find(x=>x.id===$("santriRapor").value);
+ const sem=$("semesterRapor").value;
+ if(!s)return alert("Pilih santri terlebih dahulu.");
+
+ const kelas=s.kelas;
+ const ms=db.mapel.filter(m=>m.kelas===kelas&&m.semester===sem);
+ const tahun=$("tahunRapor").value||db.pengaturan.tahun;
+ const wali=$("waliKelas").value.trim();
+ if(wali){db.wali[kelas]=wali;simpan()}
+
+ const hadir=db.absensi[keyAbs(s.id,sem)]||{sakit:0,izin:0,alpha:0};
+ let total=0,count=0;
+
+ const rows=ms.map((m,i)=>{
+  const v=nilaiAkhir(s,m,sem);
+  if(v!==null){total+=v;count++}
+  return `<tr>
+   <td>${i+1}</td>
+   <td>${aman(m.nama)}</td>
+   <td style="text-align:center">${v===null?"—":Math.round(v)}</td>
+   <td>${v===null?"—":aman(kataArab(Math.round(v)))}</td>
+  </tr>`;
+ }).join("");
+
+ const rata=count?(total/count).toFixed(2):"—";
+ const genap=sem==="Genap";
+ const status=genap?$("statusNaik").value:"";
+ const statusRow=genap?`<div style="margin-top:12px;font-size:12px">
+ <b>Status Kenaikan Kelas:</b> ${aman(status||"Belum ditentukan")}
+ </div>`:"";
+
+ $("hasilRapor").innerHTML=`
+ <article class="report">
+
+ <div class="report-title">
+  <h3>LAPORAN HASIL BELAJAR SANTRI</h3>
+  <b>Tahun Pelajaran ${aman(tahun)} · Semester ${aman(sem)}</b>
+ </div>
+
+ <div class="identity">
+  <div><span>Nama Santri</span><span>:</span><b>${aman(s.nama)}</b></div>
+  <div><span>Kelas</span><span>:</span><b>${aman(kelas)}</b></div>
+  <div><span>Orang Tua/Wali</span><span>:</span><b>${aman(s.ortu||"—")}</b></div>
+  <div><span>Nomor Induk</span><span>:</span><b>${aman(s.nis||"—")}</b></div>
+ </div>
+
+ <div class="bilingual">
+  <table>
+   <thead>
+    <tr><th colspan="4" style="text-align:center">HASIL BELAJAR SANTRI</th></tr>
+    <tr>
+     <th style="width:7%">No.</th>
+     <th style="width:43%">Mata Pelajaran</th>
+     <th style="width:15%">Nilai</th>
+     <th style="width:35%">Keterangan</th>
+    </tr>
+   </thead>
+   <tbody>
+    ${rows||'<tr><td colspan="4">Belum ada mata pelajaran.</td></tr>'}
+   </tbody>
+  </table>
+ </div>
+
+ <div class="summary">
+  <div><b>Jumlah Nilai:</b> ${count?total.toFixed(0):"—"}</div>
+  <div><b>Rata-rata:</b> ${rata}</div>
+ </div>
+
+ <div style="margin-top:14px"><b>REKAP KEHADIRAN SANTRI</b></div>
+ <table style="margin-top:6px">
+  <thead><tr><th>Keterangan</th><th>Jumlah Hari</th></tr></thead>
+  <tbody>
+   <tr><td>Sakit</td><td>${hadir.sakit||0}</td></tr>
+   <tr><td>Izin</td><td>${hadir.izin||0}</td></tr>
+   <tr><td>Alpha</td><td>${hadir.alpha||0}</td></tr>
+  </tbody>
+ </table>
+
+ ${statusRow}
+
+ <div class="signature">
+  <div>Orang Tua / Wali<div class="space"></div>(________________)</div>
+  <div>Wali Kelas<div class="space"></div><b>${aman(wali||"________________")}</b></div>
+  <div>Pimpinan Pondok<div class="space"></div><b>${aman(db.pengaturan.pimpinan||"________________")}</b></div>
+ </div>
+
+ <p class="muted" style="margin-top:15px">
+ Catatan: Nilai akhir merupakan rata-rata sederhana dari komponen nilai yang tersedia.
+ Periksa kembali nilai dan keterangan sebelum rapor dicetak secara resmi.
+ </p>
+
+ </article>`;
+}
+
+$("formPengaturan").onsubmit=e=>{
+ e.preventDefault();
+ db.pengaturan={
+  nama:$("namaLembaga").value.trim(),
+  tahun:$("tahunAktif").value.trim(),
+  alamat:$("alamatLembaga").value.trim(),
+  pimpinan:$("pimpinan").value.trim(),
+  telepon:$("telepon").value.trim(),
+  email:$("email").value.trim()
+ };
+ simpan();alert("Pengaturan tersimpan.");
+};
+
+function backup(){
+ const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="cadangan-rapor-ppsmi.json";
+ a.click();URL.revokeObjectURL(url);
+}
+function restore(e){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const d=JSON.parse(r.result);
+   if(!Array.isArray(d.santri)||!Array.isArray(d.mapel)||!d.nilai||!d.absensi)throw Error();
+   if(!confirm("Pulihkan cadangan? Data sekarang akan diganti."))return;
+   db={...db,...d,pengaturan:{...db.pengaturan,...(d.pengaturan||{})}};
+   simpan();alert("Cadangan berhasil dipulihkan.");
+  }catch(err){alert("File cadangan tidak valid atau tidak kompatibel.")}
+ };
+ r.readAsText(f);e.target.value="";
+}
+function hapusSemua(){
+ if(!confirm("Yakin menghapus seluruh data lokal? Unduh cadangan dahulu."))return;
+ localStorage.removeItem(KEY);location.reload();
+}
+
+muat();
+$("tahunMapel").value=db.pengaturan.tahun;
+$("tahunRapor").value=db.pengaturan.tahun;
+renderSemua();
+</script>
+</body>
+</html>
